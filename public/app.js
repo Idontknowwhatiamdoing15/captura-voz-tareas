@@ -160,6 +160,15 @@
     }
   });
 
+  // ── Auto-start on icon tap ────────────────────────────────────────────────
+  if (new URLSearchParams(location.search).get('action') === 'record') {
+    try {
+      recognition.start();
+    } catch {
+      // recognition already started — ignore
+    }
+  }
+
   // ── Service Worker registration ──────────────────────────────────────────
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

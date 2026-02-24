@@ -2,7 +2,7 @@
   "name": "Captura de Tareas",
   "short_name": "Tareas",
   "description": "Captura tareas por voz y envíalas a Notion en segundos.",
-  "start_url": "/",
+  "start_url": "/?action=record",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1a1a2e",
