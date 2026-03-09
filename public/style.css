@@ -12,7 +12,7 @@
   --color-success: #4caf50;
   --color-error: #f44336;
   --color-text: #eaeaea;
-  --color-text-dim: #888;
+  --color-text-dim: #aaa;
   --btn-size: 160px;
 }
 
@@ -74,7 +74,8 @@ main {
   transition: opacity 0.15s;
 }
 
-#icon-check { opacity: 0; }
+#icon-check  { opacity: 0; }
+#icon-retry  { opacity: 0; }
 #icon-spinner {
   width: 40px;
   height: 40px;
@@ -99,6 +100,13 @@ main {
   max-width: 320px;
   color: var(--color-text);
   transition: opacity 0.2s;
+}
+
+/* Interim transcript — text still being processed by the browser.
+   Dimmed and italic to signal it may still change, vs. final text at full opacity. */
+#transcript .interim {
+  opacity: 0.5;
+  font-style: italic;
 }
 
 /* Retry button */
@@ -126,6 +134,37 @@ body.idle #icon-check  { opacity: 0; }
 body.idle #icon-spinner{ opacity: 0; }
 body.idle #retry-btn   { display: none; }
 
+/* ── Countdown ring ─────────────────────────── */
+#countdown-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+#countdown-ring circle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 5;
+  stroke-dasharray: 452;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+}
+
+#countdown-ring.animating circle {
+  animation: countdown-drain 2s linear forwards;
+}
+
+@keyframes countdown-drain {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 452; }
+}
+
 /* ── State: listening ───────────────────────── */
 body.listening #capture-btn {
   background: var(--color-primary);
@@ -136,6 +175,11 @@ body.listening #icon-check  { opacity: 0; }
 body.listening #icon-spinner{ opacity: 0; }
 body.listening #status      { color: var(--color-primary); }
 body.listening #retry-btn   { display: none; }
+
+/* ── State: countdown (sub-state of listening) ── */
+body.countdown #capture-btn  { animation: none; }
+body.countdown #countdown-ring { opacity: 1; }
+body.countdown #status        { color: var(--color-text); }
 
 @keyframes pulse {
   0%, 100% { box-shadow: 0 4px 24px rgba(233,69,96,0.4); }
@@ -173,6 +217,11 @@ body.error #capture-btn {
 }
 body.error #icon-mic    { opacity: 1; }
 body.error #icon-check  { opacity: 0; }
+body.error #icon-retry  { opacity: 0; }
 body.error #icon-spinner{ opacity: 0; }
 body.error #status      { color: var(--color-error); }
 body.error #retry-btn   { display: inline-block; }
+
+/* ── State: error (retryable — has captured text) ── */
+body.error.error-retryable #icon-mic   { opacity: 0; }
+body.error.error-retryable #icon-retry { opacity: 1; }

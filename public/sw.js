@@ -1,4 +1,4 @@
-const CACHE_NAME = 'captura-voz-v2';
+const CACHE_NAME = 'captura-voz-v3';
 const ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
